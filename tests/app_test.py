@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import json
 
-from project.app import app, init_db
+from project.app import app, db
 
 TEST_DB = "test.db"
 
@@ -13,10 +13,11 @@ def client():
     BASE_DIR = Path(__file__).resolve().parent.parent
     app.config["TESTING"] = True
     app.config["DATABASE"] = BASE_DIR.joinpath(TEST_DB)
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{BASE_DIR.joinpath(TEST_DB)}"
 
-    init_db() # setup
-    yield app.test_client() # tests run here
-    init_db() # teardown
+    db.create_all()  # setup
+    yield app.test_client()  # tests run here
+    db.drop_all()  # teardown
 
 
 def login(client, username, password):
