@@ -36,7 +36,7 @@ app.config.from_object(__name__)
 # init sqlalchemy
 db = SQLAlchemy(app)
 
-import models
+from project import models
 
 
 def login_required(f):
